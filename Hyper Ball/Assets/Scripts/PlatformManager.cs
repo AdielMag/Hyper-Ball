@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Sirenix.OdinInspector;
-
+using UnityEngine.UI;
 
 public class PlatformManager : SerializedMonoBehaviour
 {
+    public Text scoreText;
+
     public int tilesCount;
     readonly int maxTilesCount = 200;
 
@@ -13,10 +15,14 @@ public class PlatformManager : SerializedMonoBehaviour
     public float platformSpeed;
 
     ObjectPooler objP;
-    
+    PlayerController pCon;
+
     private void Start()
     {
         objP = ObjectPooler.instance;
+        pCon = PlayerController.instance;
+
+        scoreText.text = 0.ToString();
     }
 
     #region Singelton
@@ -32,7 +38,9 @@ public class PlatformManager : SerializedMonoBehaviour
         if (!gameIsRunning || pauseGame)
             return;
 
-        platformSpeed = (platformSpeed >= .55f) ? .75f : .05f + ((Time.time - lastRunTime) / 200);
+        scoreText.text = Mathf.Round(Time.time - lastRunTime).ToString();
+
+        platformSpeed = (platformSpeed >= .55f) ? .75f : .05f + ((Time.time - lastRunTime) / 175);
 
         transform.Translate(-transform.forward * platformSpeed);
 
@@ -44,8 +52,12 @@ public class PlatformManager : SerializedMonoBehaviour
         lastRunTime = Time.time;
         gameIsRunning = true;
         transform.position = Vector3.zero;
+
+        pCon.transform.position = Vector3.zero + Vector3.up * 1;
+        pCon.lane = 0;
+
         newTileZpos = 0;
-        PlayerController.instance.gameObject.SetActive(true);
+        pCon.gameObject.SetActive(true);
     }
 
     public void LostRun() 

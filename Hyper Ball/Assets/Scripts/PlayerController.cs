@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
             GameObject obj = ObjectPooler.instance.SpawnFromPool("Projectile", transform.position + transform.forward * 1.3f, Quaternion.Euler(90, 0, 0));
         }
         Vector3 targetPos = Vector3.up * transform.position.y + transform.right * (lane * lanesPosMultiplier);
-        transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * 6);
+        transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * 10);
 
         if (rb.velocity.y > 0)
         {

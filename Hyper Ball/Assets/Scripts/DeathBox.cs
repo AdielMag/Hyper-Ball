@@ -7,6 +7,8 @@ public class DeathBox : MonoBehaviour
 {
     PlatformManager pMan;
 
+    public GameObject temporrayPlayButton;
+
     private void Start()
     {
         pMan = PlatformManager.instance;
@@ -16,5 +18,6 @@ public class DeathBox : MonoBehaviour
     {
         other.gameObject.SetActive(false);
         pMan.LostRun();
-    }
+        temporrayPlayButton.SetActive(true);    
+        }
 }
