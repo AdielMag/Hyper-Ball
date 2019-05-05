@@ -2,6 +2,7 @@
 
 public class RegualrTile : MonoBehaviour,IPooledObject
 {
+    bool risingTile;
     bool fall, rotateOnce;
 
     float origHeight;
@@ -40,10 +41,14 @@ public class RegualrTile : MonoBehaviour,IPooledObject
         if (!animator)
             return;
 
-        fall = true;
+        if (risingTile)
+            animator.SetTrigger("Rise");
+
+        else
+            fall = true;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (fall)
         {

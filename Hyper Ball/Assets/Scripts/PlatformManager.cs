@@ -6,13 +6,16 @@ using UnityEngine.UI;
 public class PlatformManager : SerializedMonoBehaviour
 {
     public Text scoreText;
+    float score;
 
     public int tilesCount;
     readonly int maxTilesCount = 200;
 
+    [HideInInspector]
     public bool gameIsRunning, pauseGame;
-    float lastRunTime = 0;
-    public float platformSpeed;
+    float platformSpeed;
+    [Range(1,7)]
+    public float platformSpeedMultiplier;
 
     ObjectPooler objP;
     PlayerController pCon;
@@ -38,9 +41,9 @@ public class PlatformManager : SerializedMonoBehaviour
         if (!gameIsRunning || pauseGame)
             return;
 
-        scoreText.text = Mathf.Round(Time.time - lastRunTime).ToString();
+        scoreText.text = Mathf.Round(score++ / 60).ToString();
 
-        platformSpeed = (platformSpeed >= .55f) ? .75f : .05f + ((Time.time - lastRunTime) / 175);
+        platformSpeed = (platformSpeed >= .65f) ? .65f : platformSpeed + (platformSpeedMultiplier / 10000);
 
         transform.Translate(-transform.forward * platformSpeed);
 
@@ -49,7 +52,8 @@ public class PlatformManager : SerializedMonoBehaviour
 
     public void StartNewRun()
     {
-        lastRunTime = Time.time;
+        score = 0;
+        platformSpeed = 0.04f;
         gameIsRunning = true;
         transform.position = Vector3.zero;
 
@@ -102,27 +106,7 @@ public class PlatformManager : SerializedMonoBehaviour
             newTileZpos++;
             UpdateSpawnTimer(.05f);
             return;
-        }   // BlueT iles
-        if (newTileZpos < 22)
-        {
-            for (int x = -1; x < 2; x++)
-            {
-                objP.SpawnFromPool("GreyTile", Quaternion.identity, new Vector3(x, 0, newTileZpos), transform);
-            }
-            newTileZpos++;
-            UpdateSpawnTimer(.05f);
-            return;
-        }   // Grey Tiles
-        if (newTileZpos < 24)
-        {
-            for (int x = -1; x < 2; x++)
-            {
-                objP.SpawnFromPool("GreenTile", Quaternion.identity, new Vector3(x, 0, newTileZpos), transform);
-            }
-            newTileZpos++;
-            UpdateSpawnTimer(.05f);
-            return;
-        }   // Green Tiles
+        }   // Blue Tiles
         #endregion
 
         TilesSpawnerBrain();
@@ -130,7 +114,6 @@ public class PlatformManager : SerializedMonoBehaviour
 
     void UpdateSpawnTimer(float timeToWait)
     {
-        timeToWait -= (Time.time - lastRunTime) / 100;
         spawnTimer = Time.time + timeToWait;
     }
 
@@ -146,11 +129,14 @@ public class PlatformManager : SerializedMonoBehaviour
         {
             for (int x = 0; x < pathX; x++)
             {
+                if (tileType == "Empty") { }
+
+                else
                 objP.SpawnFromPool(tileType, Quaternion.identity, new Vector3(x + pathXoffset, 0, newTileZpos), transform);
             }
             newTileZpos++;
             pathZ--;
-            UpdateSpawnTimer(.3f);
+            UpdateSpawnTimer(0);
         }
     }
 
@@ -164,7 +150,7 @@ public class PlatformManager : SerializedMonoBehaviour
         while (!newPathCompatible)
         {
             pathXrangeMax = 6;
-            int tempTileType = Random.Range(1, 9);
+            int tempTileType = Random.Range(1, 8);
 
             pathXoffset = Random.Range(-2, 3); // 2
 
@@ -190,15 +176,13 @@ public class PlatformManager : SerializedMonoBehaviour
 
             if (tempTileType < 5)
                 tileType = "GreenTile";
-            else if (tempTileType < 8)
-
+            else if (tempTileType < 7)
                 tileType = "BlueTile";
             else
             {
-                pathZ = Random.Range(0, 3);
-                tileType = "GreyTile";
+                tileType = "Empty";
+                pathZ = Random.Range(1, 3);
             }
-
             if (oldPathX == 0)
             {
                 oldPathX = pathX + pathXoffset;
