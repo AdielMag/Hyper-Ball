@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 732c20efb2fee42fda157a07943a9517, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fallOffsetTimer: 0.3
+  fallOffsetTimer: 0.2
 --- !u!65 &5712400246102480177
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -73,7 +73,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.8, y: 1, z: 0.8}
-  m_Center: {x: 0, y: 1.2, z: -0.5}
+  m_Center: {x: 0, y: 1.2, z: 0}
 --- !u!95 &5712400246102480176
 Animator:
   serializedVersion: 3

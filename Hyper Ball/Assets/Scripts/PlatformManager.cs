@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Sirenix.OdinInspector;
 using UnityEngine.UI;
 
-public class PlatformManager : SerializedMonoBehaviour
+public class PlatformManager : MonoBehaviour
 {
     public Text scoreText;
     float score;
@@ -170,7 +169,7 @@ public class PlatformManager : SerializedMonoBehaviour
                     break;
             }
 
-            pathZ = Random.Range(3, 9);
+            pathZ = Random.Range(3, 12);
             pathX = Random.Range(1, pathXrangeMax); //4
 
 
@@ -178,11 +177,17 @@ public class PlatformManager : SerializedMonoBehaviour
                 tileType = "GreenTile";
             else if (tempTileType < 7)
                 tileType = "BlueTile";
+            else if (tempTileType < 10)
+            {
+                tileType = "RedTile";
+                pathZ = 1;
+            }
             else
             {
                 tileType = "Empty";
                 pathZ = Random.Range(1, 3);
             }
+
             if (oldPathX == 0)
             {
                 oldPathX = pathX + pathXoffset;
